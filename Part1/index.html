@@ -40,7 +40,7 @@
 <body>
 
   <h1>Quote generator homework</h1>
-  <h2>Create by Gift sensei </h2> <!-- Change XXXX to your name and student ID-->
+  <h2>Create by Hung-AM24103 </h2> <!-- Change XXXX to your name and student ID-->
 
   <div id="quoteBox">
     <p id="quote">Click the button to get a quote!</p>
@@ -54,16 +54,34 @@
   </footer>
 
   <script>
-    const quoteText = document.getElementById("quote");
-    const authorText = document.getElementById("author");
-    const newQuoteBtn = document.getElementById("newQuoteBtn");
+  const quoteText = document.getElementById("quote");
+  const authorText = document.getElementById("author");
+  const newQuoteBtn = document.getElementById("newQuoteBtn");
 
-    function getQuote() {
-       
+  let quotes = [];
+
+  async function loadQuotes() {
+    try {
+      const response = await fetch('quotes.json');
+      quotes = await response.json();
+      getQuote(); // Show a quote after loading
+    } catch (error) {
+      quoteText.textContent = "Failed to load quotes.";
+      console.error("Error loading quotes.json:", error);
     }
-    newQuoteBtn.addEventListener("click", getQuote);
-    getQuote(); // Load a quote on page load
-  </script>
+  }
+
+  function getQuote() {
+    if (quotes.length === 0) return;
+    const randomIndex = Math.floor(Math.random() * quotes.length);
+    const randomQuote = quotes[randomIndex];
+    quoteText.textContent = `"${randomQuote.q}"`;
+    authorText.textContent = `— ${randomQuote.a}`;
+  }
+
+  newQuoteBtn.addEventListener("click", getQuote);
+  loadQuotes();
+</script>
 
 </body>
 
