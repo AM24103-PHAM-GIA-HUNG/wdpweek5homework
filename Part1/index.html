@@ -54,26 +54,38 @@
   </footer>
 
   <script>
-  const quoteText = document.getElementById("quote");
-  const authorText = document.getElementById("author");
-  const newQuoteBtn = document.getElementById("newQuoteBtn");
+    const quoteText = document.getElementById("quote");
+    const authorText = document.getElementById("author");
+    const newQuoteBtn = document.getElementById("newQuoteBtn");
 
-  let quotes = [];
+    let quotes = [];
 
-  const response = await fetch('quotes.json');
-  quotes = await response.json();
+    async function loadQuotes() {
+      try {
+        const response = await fetch('quotes.json');
+        quotes = await response.json();
+        // Load first quote when page loads
+        getQuote();
+      } catch (error) {
+        console.error('Error loading quotes:', error);
+        quoteText.textContent = "Error loading quotes. Please try again later.";
+      }
+    }
 
-  function getQuote() {
-    if (quotes.length === 0) return;
-    const randomIndex = Math.floor(Math.random() * quotes.length);
-    const randomQuote = quotes[randomIndex];
-    quoteText.textContent = `"${randomQuote.q}"`;
-    authorText.textContent = `— ${randomQuote.a}`;
-  }
+    function getQuote() {
+      if (quotes.length === 0) {
+        quoteText.textContent = "No quotes available.";
+        return;
+      }
+      const randomIndex = Math.floor(Math.random() * quotes.length);
+      const randomQuote = quotes[randomIndex];
+      quoteText.textContent = `"${randomQuote.q}"`;
+      authorText.textContent = `— ${randomQuote.a}`;
+    }
 
-  newQuoteBtn.addEventListener("click", getQuote);
-  loadQuotes();
-</script>
+    newQuoteBtn.addEventListener("click", getQuote);
+    loadQuotes();
+  </script>
 
 </body>
 
